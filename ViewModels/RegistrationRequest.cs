@@ -9,12 +9,17 @@ namespace ApiTest1.ViewModels
         public string? Email { get; set; }
 
 
+        [Required(ErrorMessage = "Login is required")]
+        public string? Login {  get; set; }
+
+
         [Required(ErrorMessage = "BirthDay is required field")]
         //public string? BirthDay { get; set; }
-        public DateOnly BirthDay { get; set; }
+        //public DateOnly DirthDay { get; set; }
+        public string? BirthDay { get; set; }
 
-        
-        
+
+
         [Required(ErrorMessage = "Password can not be empty")]
         public string? Password { get; set; }
         

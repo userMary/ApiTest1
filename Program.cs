@@ -26,7 +26,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // Co
             ValidateIssuerSigningKey = true,
             ValidIssuer = "your_issuer",
             ValidAudience = "your_audience",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("rOe7o1N80fT1+f4tw5o4oxHRVGcoiYZ1ow5hIBEHvtk="))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("rOe7o1N80fT1+f4tw5o4oxHRVGcoiYZ1ow5hIBEHvtk=")),
+            ClockSkew = TimeSpan.FromMinutes(1) // Погрешность времени
         };
     });
 
@@ -34,6 +35,16 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("EmployeeOnly", policy => policy.RequireRole("Admin"));
 });
+
+// Add Cors (b - это builder)
+builder.Services.AddCors(o => o.AddPolicy("MyPolicy", b =>
+{
+    string allowOrigins = builder.Configuration.GetValue<string>("AllowOrigins");
+    b.WithOrigins(allowOrigins) // WithOrigins("http://localhost:4200")
+           .WithMethods("POST", "GET")
+           .AllowCredentials() // WithMethods("POST", "GET")
+           .AllowAnyHeader();
+}));
 
 builder.Services.AddControllers();
 
@@ -76,8 +87,9 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage(); //обработчик если есть ошибка, развернутый фитбэек - текст ошибки
     app.UseSwagger();
     app.UseSwaggerUI();
-
 }
+
+app.UseCors("MyPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

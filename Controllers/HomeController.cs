@@ -13,12 +13,14 @@ namespace ApiTest1.Controllers
         {
             ClaimsPrincipal user = HttpContext.User;
             //return Ok("Hello, " + username); // {{ _.url }}?username=Nomnnn // http://localhost:5272?username=Tom
-            return Ok("All good cookie");
+            return Ok("{\"text\": \"All good cookie\"}");
         }
+
+        // над каждым экшеном есть атрибут с указанием политики [Authorize..........
         [Authorize(JwtBearerDefaults.AuthenticationScheme, Policy = "EmployeeOnly")]
         public IActionResult Test()
         {
-            return Ok("All good JWT");
+            return Ok("{\"text\": \"All good JWT\"}");
         }
     }
 }
